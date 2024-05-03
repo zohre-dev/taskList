@@ -1,12 +1,13 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TaskCard } from "./TaskCard";
 import Image from "next/image";
-import { TakkContainer } from "./style";
+import { TaskContainer } from "./style";
 import { Button } from "../Button";
 
 export const Task: FC = () => {
+  const [] = useState<boolean>();
   return (
-    <TakkContainer>
+    <TaskContainer>
       <div className="flex justify-between items-center">
         <h2>Task List</h2>
         <Button bgColor="#713fff">
@@ -24,6 +25,6 @@ export const Task: FC = () => {
         <TaskCard />
         <TaskCard />
       </div>
-    </TakkContainer>
+    </TaskContainer>
   );
 };

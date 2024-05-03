@@ -14,6 +14,11 @@ export const ButtonContainer = styled.button<{
   font-size: 16px;
   color: #ffffff;
 
+  &:disabled {
+    background-color: #91929e;
+    cursor: not-allowed;
+  }
+
   &.outline {
     background: #ffffff;
     border: 1px solid #d8e0f0;

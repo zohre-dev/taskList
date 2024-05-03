@@ -42,7 +42,9 @@ export const AddEditTaskForm: FC = () => {
           </div>
         </div>
         <div className="flex justify-end mt-5">
-          <Button bgColor="#713fff">Add</Button>
+          <Button bgColor="#713fff" isDisabled={true}>
+            Add
+          </Button>
         </div>
       </form>
     </Modal>
