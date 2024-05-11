@@ -4,13 +4,28 @@ import Modal from "../Modal";
 import Image from "next/image";
 import { Button } from "../Button";
 import Input from "../Input";
+import { Task } from "../TaskList/models/task";
 
-export const AddEditTaskForm: FC = () => {
+interface IAddOrEditTaskForm {
+  show: boolean;
+  currentModal: "add" | "edit" | "";
+  addOrEditTask: (task: Task) => void;
+}
+
+export const AddOrEditTaskModal: FC<IAddOrEditTaskForm> = ({
+  show,
+  currentModal,
+  addOrEditTask,
+}) => {
+  console.log(currentModal);
+
+  const handleEditNewTask = () => {};
+
   return (
-    <Modal>
+    <Modal width={50}>
       <form className="flex flex-col gap-5">
         <div className="flex justify-between ">
-          <span>Add Task</span>
+          <span>{currentModal === "add" ? "Add Task" : "Edit Task"}</span>
           <Image
             src="/assets/icons/close.svg"
             width={24}
@@ -43,7 +58,7 @@ export const AddEditTaskForm: FC = () => {
         </div>
         <div className="flex justify-end mt-5">
           <Button bgColor="#713fff" isDisabled={true}>
-            Add
+            {currentModal === "add" ? "Add" : "Edit"}
           </Button>
         </div>
       </form>

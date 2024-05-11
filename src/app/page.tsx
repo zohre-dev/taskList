@@ -1,7 +1,8 @@
-import { AddEditTaskForm } from "@/components/AddEditTaskForm";
+"use client";
 import { Button } from "@/components/Button";
-import { Task } from "@/components/Task";
-import { TaskCard } from "@/components/Task/TaskCard";
+import { TaskList } from "@/components/TaskList";
+// import { useAppContext } from "@/context";
+
 import Image from "next/image";
 
 //  #0a1629;
@@ -12,10 +13,21 @@ import Image from "next/image";
 //  #f73446;
 
 export default function Home() {
+  // const { dispatch, values } = useAppContext();
+
+  // const handleOpen = () => {
+  //   dispatch.setOpenModal(true);
+  // };
+
+  // const showOpen = () => {
+  //   const valu = values.open;
+  //   console.log(valu);
+  // };
   return (
     <>
-      {/* <Task /> */}
-      <AddEditTaskForm />
+      {/* <button onClick={handleOpen}>Open</button>
+      <button onClick={showOpen}>show</button> */}
+      <TaskList />
     </>
   );
 }
