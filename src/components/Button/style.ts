@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const ButtonContainer = styled.button<{
-  $bgColor: string | undefined;
+  $bgcolor: string | undefined;
 }>`
-  background: ${(props) => props.$bgColor};
+  background: ${(props) => props.$bgcolor};
   box-shadow: 0px 6px 12px rgba(113, 63, 255, 0.25);
   border-radius: 14px;
   padding: 13px 30px;
@@ -28,11 +28,11 @@ export const ButtonContainer = styled.button<{
   }
   &.priorityBtn {
     background-color: white;
-    border: 1px solid ${(props) => props.$bgColor};
-    color: ${(props) => props.$bgColor};
+    border: 1px solid ${(props) => props.$bgcolor};
+    color: ${(props) => props.$bgcolor};
     text-transform: capitalize;
     &-selected {
-      background-color: ${(props) => props.$bgColor};
+      background-color: ${(props) => props.$bgcolor};
       color: #ffffff;
     }
   }

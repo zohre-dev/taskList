@@ -4,7 +4,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { TaskWrapper } from "./style";
 import { Task } from "../models/task";
-import { TaskStatus } from "../models/enums";
+import { TaskStatus } from "../models/taskStatus";
 import { AddOrEditModal } from "@/components/Modal/AddOrEditModal";
 import { useAppContext } from "@/context";
 
@@ -65,7 +65,7 @@ export const TaskCard: FC<TaskCardProps> = ({ task }) => {
           />
         </div>
       </TaskWrapper>
-      {showEditForm && <AddOrEditModal editMode={true} />}
+      {/* {showEditForm && <AddOrEditModal editMode={true} />} */}
     </>
   );
 };

@@ -4,12 +4,16 @@ import { ButtonHTMLAttributes, FC } from "react";
 import { ButtonContainer } from "./style";
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  bgColor?: string | undefined;
-  isDisabled?: boolean;
+  bgcolor?: string | undefined;
+  isdisabled?: boolean | undefined;
 }
 export const Button: FC<IProps> = (props) => {
   return (
-    <ButtonContainer $bgColor={props.bgColor} disabled={props.isDisabled} />
+    <ButtonContainer
+      {...props}
+      $bgcolor={props.bgcolor}
+      disabled={props.isdisabled}
+    />
   );
 };
 

@@ -15,15 +15,24 @@ export const ModalContainer = styled.div<{ $width: number | undefined }>`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: rgba(1, 4, 1, 0.4);
+
+  .mask {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 4, 1, 0.4);
+  }
   .modal-content {
     background-color: #ffffff;
     box-shadow: 0px 6px 58px rgba(121, 145, 173, 0.195504);
     border-radius: 24px;
     padding: 40px 60px;
-    margin: 10% auto;
     width: ${(props) => props.$width?.toString().concat("%")};
     min-height: 200px;
     cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 100;
   }
 `;
