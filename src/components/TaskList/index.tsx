@@ -4,44 +4,25 @@ import { TaskCard } from "./TaskCard";
 import Image from "next/image";
 import { TaskContainer } from "./style";
 import { Button } from "../Button";
-import { TaskStatus } from "./models/taskStatus";
-import { Task } from "./models/task";
-import { AddOrEditModal } from "../Modal/AddOrEditModal";
+import { Task, TaskPriotity, TaskStatus } from "./models/task";
 import { useAppContext } from "@/context";
-
-export const taskRecords: Task[] = [
-  {
-    id: 1,
-    title: "Go to gym",
-    priority: "high",
-    status: TaskStatus.TODO,
-    // progress: TaskProgress.TODO,
-  },
-  {
-    id: 2,
-    title: "Read a book",
-    priority: "low",
-    status: TaskStatus.DONE,
-    // progress: TaskProgress.DONE,
-  },
-];
+import { AddOrEditModal } from "../Modal/AddOrEditModal";
 
 export const TaskList: FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(taskRecords);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  //destructure:
   const { values, dispatch, func } = useAppContext();
-  const lastId = tasks[tasks.length - 1].id;
+  const { tasks } = values;
+  const { setOpenModal, setEditMode } = dispatch;
+
+  const [newRecordId, setNewRecordId] = useState<number | undefined>(1);
 
   const AddBtnClicked = () => {
-    dispatch.setOpenModal(true);
-  };
+    console.log(tasks);
+    const id = tasks[tasks.length - 1].id;
+    setNewRecordId(id! + 1);
 
-  const AddOrEditTask = (task: Task) => {
-    //it's addMode - editMode is false
-    if (!editMode) {
-      console.log("addMode ", task);
-      setTasks((prevTasks) => [task, ...prevTasks]);
-    }
+    setEditMode(false);
+    setOpenModal(true);
   };
 
   return (
@@ -59,18 +40,13 @@ export const TaskList: FC = () => {
           Add Task
         </Button>
       </div>
-
       <div>
         {tasks.map((tsk) => (
           <TaskCard task={tsk} key={tsk.id} />
         ))}
       </div>
 
-      <AddOrEditModal
-        editMode={editMode}
-        newRecordId={lastId ? lastId + 1 : 1}
-        AddOrEditTask={AddOrEditTask}
-      />
+      <AddOrEditModal newRecordId={newRecordId} />
     </TaskContainer>
   );
 };

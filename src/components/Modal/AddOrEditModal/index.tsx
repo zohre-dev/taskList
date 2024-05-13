@@ -1,42 +1,58 @@
 import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import Image from "next/image";
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import Modal from "..";
 import { useAppContext } from "@/context";
-import { Task } from "@/components/TaskList/models/task";
-import { TaskStatus } from "@/components/TaskList/models/taskStatus";
+import {
+  Task,
+  TaskPriotity,
+  TaskStatus,
+} from "@/components/TaskList/models/task";
 
 interface IAddOrEditProps {
-  editMode: boolean;
-  newRecordId?: number | undefined;
-  AddOrEditTask: (tsk: Task) => void;
+  newRecordId?: number;
 }
 
-export const AddOrEditModal: FC<IAddOrEditProps> = ({
-  editMode,
-  newRecordId,
-  AddOrEditTask,
-}) => {
+export const AddOrEditModal: FC<IAddOrEditProps> = ({ newRecordId }) => {
   const [temporaryTask, setTemporaryTask] = useState<Task>({
     title: "",
-    priority: "low",
+    priority: TaskPriotity.Low,
     status: TaskStatus.TODO,
   });
   //destructure:
-  const { values, func } = useAppContext();
+  const { values, dispatch, func } = useAppContext();
+  const { tasks, editMode, selectedTask } = values;
+  const { addOrEditTask } = func;
+
   const handleOnClose = () => {
     func.onClose();
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setTemporaryTask({ ...temporaryTask, id: newRecordId, title: value });
+    setTemporaryTask({ id: newRecordId, ...temporaryTask, title: value });
   };
   const AddOrEditButtonClicked = () => {
-    AddOrEditTask(temporaryTask);
+    //it's addMode:
+    if (!editMode) {
+      addOrEditTask(temporaryTask);
+      func.onClose();
+    }
   };
+  //destructure:
   const { title } = temporaryTask;
+
+  useEffect(() => {
+    //if editMode is true:
+    if (editMode) {
+      temporaryTask.id = selectedTask.id;
+      temporaryTask.title = selectedTask.title;
+      temporaryTask.priority = selectedTask.priority;
+      temporaryTask.status = selectedTask.status;
+      console.log(temporaryTask);
+    }
+  });
   return (
     <Modal
       show={values.open}

@@ -4,7 +4,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { TaskWrapper } from "./style";
 import { Task } from "../models/task";
-import { TaskStatus } from "../models/taskStatus";
+
 import { AddOrEditModal } from "@/components/Modal/AddOrEditModal";
 import { useAppContext } from "@/context";
 
@@ -13,15 +13,16 @@ interface TaskCardProps {
 }
 
 export const TaskCard: FC<TaskCardProps> = ({ task }) => {
-  //Destructure:
+  //destructure:
   const { id, title, priority, status } = task;
-
-  const [showEditForm, setShowEditForm] = useState<boolean>(false);
-  const { dispatch } = useAppContext();
+  const { values, dispatch, func } = useAppContext();
+  const { addOrEditTask } = func;
+  const { setEditMode, setSelectedTask, setOpenModal } = dispatch;
 
   const editBtnClicked = () => {
-    setShowEditForm(true);
-    dispatch.setOpenModal(true);
+    setEditMode(true);
+    setSelectedTask(task);
+    setOpenModal(true);
   };
 
   return (
@@ -66,6 +67,8 @@ export const TaskCard: FC<TaskCardProps> = ({ task }) => {
         </div>
       </TaskWrapper>
       {/* {showEditForm && <AddOrEditModal editMode={true} />} */}
+
+      {/* <AddOrEditModal editMode={true} newRecordId={id} /> */}
     </>
   );
 };
