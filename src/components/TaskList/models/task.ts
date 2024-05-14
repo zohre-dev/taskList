@@ -6,7 +6,7 @@ export enum TaskStatus {
   DONE = "Done",
 }
 
-export enum TaskPriotity {
+export enum TaskPriority {
   High = "high",
   Medium = "medium",
   Low = "low",
@@ -14,6 +14,6 @@ export enum TaskPriotity {
 export interface Task {
   id?: number;
   title: string;
-  priority: TaskPriotity; //"high" | "medium" | "low"
+  priority: TaskPriority; //"high" | "medium" | "low"
   status?: TaskStatus; //To Do  , In Progress  , Done
 }

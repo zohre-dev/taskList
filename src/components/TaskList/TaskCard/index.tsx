@@ -8,20 +8,20 @@ import { Task } from "../models/task";
 import { AddOrEditModal } from "@/components/Modal/AddOrEditModal";
 import { useAppContext } from "@/context";
 
-interface TaskCardProps {
+interface ITaskCardProps {
   task: Task;
+  setSelectedTask: (task: Task) => void;
 }
 
-export const TaskCard: FC<TaskCardProps> = ({ task }) => {
+export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
   //destructure:
   const { id, title, priority, status } = task;
   const { values, dispatch, func } = useAppContext();
-  const { addOrEditTask } = func;
-  const { setEditMode, setSelectedTask, setOpenModal } = dispatch;
+  const { setEditMode, setOpenModal } = dispatch;
 
   const editBtnClicked = () => {
-    setEditMode(true);
     setSelectedTask(task);
+    setEditMode(true);
     setOpenModal(true);
   };
 

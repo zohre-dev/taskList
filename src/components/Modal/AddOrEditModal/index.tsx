@@ -6,23 +6,29 @@ import Modal from "..";
 import { useAppContext } from "@/context";
 import {
   Task,
-  TaskPriotity,
+  TaskPriority,
   TaskStatus,
 } from "@/components/TaskList/models/task";
 
-interface IAddOrEditProps {}
+interface IAddOrEditProps {
+  addOrEditFunc: (task: Task) => void;
+  selectedTask: Task;
+}
 
-export const AddOrEditModal: FC<IAddOrEditProps> = () => {
+export const AddOrEditModal: FC<IAddOrEditProps> = ({
+  addOrEditFunc,
+  selectedTask,
+}) => {
   const [lastId, setLastId] = useState<number | undefined>(0);
   const [temporaryTask, setTemporaryTask] = useState<Task>({
     title: "",
-    priority: TaskPriotity.Low,
+    priority: TaskPriority.Low,
     status: TaskStatus.TODO,
   });
   //destructure:
   const { values, dispatch, func } = useAppContext();
-  const { tasks, editMode, selectedTask } = values;
-  const { addOrEditTask, onClose } = func;
+  const { tasks, editMode } = values;
+  const { onClose } = func;
 
   const handleOnClose = () => {
     onClose();
@@ -33,12 +39,14 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
     setTemporaryTask({ id: lastId! + 1, ...temporaryTask, title: value });
   };
   const AddOrEditButtonClicked = () => {
-    //it's addMode:
-    if (!editMode) {
-      addOrEditTask(temporaryTask);
-      onClose();
-    }
+    addOrEditFunc(temporaryTask);
+    onClose();
   };
+
+  // const selectPriority = (priority: TaskPriotity) => {
+  //   setTemporaryTask((prevTasks)=> {...prevTasks , priority:priority.})
+  // };
+
   //destructure:
   const { title } = temporaryTask;
 
@@ -50,6 +58,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
       setLastId(id);
     } else {
       console.log("Edit Mode");
+
       temporaryTask.id = selectedTask.id;
       temporaryTask.title = selectedTask.title;
       temporaryTask.priority = selectedTask.priority;
@@ -85,17 +94,21 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
         <div className="flex flex-col gap-2">
           <label>Priority</label>
           <div className="flex  gap-3">
-            <Button className="priorityBtn" bgcolor="#f73446">
-              High
+            <Button
+              className="priorityBtn"
+              bgcolor="#f73446"
+              // onClick={selectPriority}
+            >
+              {TaskPriority.High}
             </Button>
             <Button
               className="priorityBtn priorityBtn-selected"
               bgcolor="#ffbd21"
             >
-              Medium
+              {TaskPriority.Medium}
             </Button>
             <Button className="priorityBtn" bgcolor="#0ac947">
-              Low
+              {TaskPriority.Low}
             </Button>
           </div>
         </div>
