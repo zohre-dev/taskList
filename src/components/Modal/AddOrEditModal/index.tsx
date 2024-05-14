@@ -22,10 +22,10 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
   //destructure:
   const { values, dispatch, func } = useAppContext();
   const { tasks, editMode, selectedTask } = values;
-  const { addOrEditTask } = func;
+  const { addOrEditTask, onClose } = func;
 
   const handleOnClose = () => {
-    func.onClose();
+    onClose();
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +51,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
       temporaryTask.status = selectedTask.status;
       console.log(temporaryTask);
     } else {
+      console.log("tasks are : ", tasks);
       const id = tasks[tasks.length - 1].id;
       setLastId(id);
     }
