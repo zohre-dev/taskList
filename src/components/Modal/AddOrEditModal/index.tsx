@@ -10,11 +10,10 @@ import {
   TaskStatus,
 } from "@/components/TaskList/models/task";
 
-interface IAddOrEditProps {
-  newRecordId?: number;
-}
+interface IAddOrEditProps {}
 
-export const AddOrEditModal: FC<IAddOrEditProps> = ({ newRecordId }) => {
+export const AddOrEditModal: FC<IAddOrEditProps> = () => {
+  const [lastId, setLastId] = useState<number | undefined>(0);
   const [temporaryTask, setTemporaryTask] = useState<Task>({
     title: "",
     priority: TaskPriotity.Low,
@@ -31,7 +30,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({ newRecordId }) => {
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setTemporaryTask({ id: newRecordId, ...temporaryTask, title: value });
+    setTemporaryTask({ id: lastId! + 1, ...temporaryTask, title: value });
   };
   const AddOrEditButtonClicked = () => {
     //it's addMode:
@@ -51,6 +50,9 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({ newRecordId }) => {
       temporaryTask.priority = selectedTask.priority;
       temporaryTask.status = selectedTask.status;
       console.log(temporaryTask);
+    } else {
+      const id = tasks[tasks.length - 1].id;
+      setLastId(id);
     }
   });
   return (

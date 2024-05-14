@@ -14,13 +14,7 @@ export const TaskList: FC = () => {
   const { tasks } = values;
   const { setOpenModal, setEditMode } = dispatch;
 
-  const [newRecordId, setNewRecordId] = useState<number | undefined>(1);
-
   const AddBtnClicked = () => {
-    console.log(tasks);
-    const id = tasks[tasks.length - 1].id;
-    setNewRecordId(id! + 1);
-
     setEditMode(false);
     setOpenModal(true);
   };
@@ -46,7 +40,7 @@ export const TaskList: FC = () => {
         ))}
       </div>
 
-      <AddOrEditModal newRecordId={newRecordId} />
+      <AddOrEditModal />
     </TaskContainer>
   );
 };

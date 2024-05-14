@@ -79,7 +79,7 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   };
   const addOrEditFunc = (task: Task) => {
     //it is addMode:
-    if (!editMode) setTasks([...tasks, task]);
+    if (!editMode) setTasks((prevTasks) => [...prevTasks, task]);
     //it is editMode:
     else {
       const editedTasks = tasks.map((tsk) =>
