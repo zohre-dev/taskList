@@ -66,9 +66,6 @@ export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
           />
         </div>
       </TaskWrapper>
-      {/* {showEditForm && <AddOrEditModal editMode={true} />} */}
-
-      {/* <AddOrEditModal editMode={true} newRecordId={id} /> */}
     </>
   );
 };
