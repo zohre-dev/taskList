@@ -36,26 +36,27 @@ export const AddOrEditModal: FC<IAddOrEditProps> = () => {
     //it's addMode:
     if (!editMode) {
       addOrEditTask(temporaryTask);
-      func.onClose();
+      onClose();
     }
   };
   //destructure:
   const { title } = temporaryTask;
 
   useEffect(() => {
-    //if editMode is true:
-    if (editMode) {
+    //it's addMode:
+    if (!editMode) {
+      console.log("Add Mode");
+      const id = tasks[tasks.length - 1].id;
+      setLastId(id);
+    } else {
+      console.log("Edit Mode");
       temporaryTask.id = selectedTask.id;
       temporaryTask.title = selectedTask.title;
       temporaryTask.priority = selectedTask.priority;
       temporaryTask.status = selectedTask.status;
       console.log(temporaryTask);
-    } else {
-      console.log("tasks are : ", tasks);
-      const id = tasks[tasks.length - 1].id;
-      setLastId(id);
     }
-  });
+  }, []);
   return (
     <Modal
       show={values.open}
