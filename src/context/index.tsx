@@ -17,11 +17,15 @@ interface IContext {
     width: number;
     closable: boolean;
     editMode: boolean;
+    deleteMode: boolean;
     tasks: Task[];
+    confirmDeletion: boolean;
   };
   dispatch: {
     setOpenModal: Dispatch<SetStateAction<boolean>>;
     setEditMode: Dispatch<SetStateAction<boolean>>;
+    setDeleteMode: Dispatch<SetStateAction<boolean>>;
+    setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
     setTasks: Dispatch<SetStateAction<Task[]>>;
   };
   func: {
@@ -36,12 +40,16 @@ const AppContext = createContext<IContext>({
     open: false,
     width: 30,
     editMode: false,
+    deleteMode: false,
     tasks: taskRecords,
+    confirmDeletion: false,
   },
   dispatch: {
     setOpenModal: () => {},
     setEditMode: () => {},
+    setDeleteMode: () => {},
     setTasks: () => {},
+    setConfirmDeletion: () => {},
   },
   func: {
     onClose: () => {},
@@ -53,6 +61,8 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [tasks, setTasks] = useState<Task[]>(taskRecords);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [deleteMode, setDeleteMode] = useState<boolean>(false);
+  const [confirmDeletion, setConfirmDeletion] = useState<boolean>(false);
 
   const closeFunc = () => {
     setOpenModal(false);
@@ -64,12 +74,16 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       open: openModal,
       width: 30,
       editMode: editMode,
+      deleteMode: deleteMode,
+      confirmDeletion,
       tasks: tasks,
     },
     dispatch: {
       setOpenModal,
       setTasks,
       setEditMode,
+      setDeleteMode,
+      setConfirmDeletion,
     },
     func: {
       onClose: closeFunc,

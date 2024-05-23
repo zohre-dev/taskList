@@ -2,8 +2,10 @@ import styled from "styled-components";
 
 export const ButtonContainer = styled.button<{
   $bgcolor: string | undefined;
+  $disabled?: boolean;
 }>`
-  background: ${(props) => props.$bgcolor};
+  background: ${({ $bgcolor, $disabled }) =>
+    $disabled ? $bgcolor?.concat("50") : $bgcolor};
   box-shadow: 0px 6px 12px rgba(113, 63, 255, 0.25);
   border-radius: 14px;
   padding: 13px 30px;
@@ -12,19 +14,19 @@ export const ButtonContainer = styled.button<{
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  color: #ffffff;
+  color: ${(props) => props.theme.white};
 
-  &:disabled {
+  /* &:disabled {
     background-color: #91929e;
     cursor: not-allowed;
-  }
+  } */
 
   &.outline {
-    background: #ffffff;
+    background: ${(props) => props.theme.white};
     border: 1px solid #d8e0f0;
     box-shadow: 0px 1px 2px rgba(184, 200, 224, 0.222055);
     font-weight: 400;
-    color: #7d8592;
+    color: ${(props) => props.theme.gray};
   }
   &.priorityBtn {
     background-color: white;
@@ -33,7 +35,7 @@ export const ButtonContainer = styled.button<{
     text-transform: capitalize;
     &-selected {
       background-color: ${(props) => props.$bgcolor};
-      color: #ffffff;
+      color: ${(props) => props.theme.white};
     }
   }
 `;

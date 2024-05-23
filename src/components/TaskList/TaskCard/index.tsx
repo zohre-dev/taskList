@@ -4,26 +4,24 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { TaskWrapper } from "./style";
 import { Task } from "../models/task";
-
-import { AddOrEditModal } from "@/components/Modal/AddOrEditModal";
 import { useAppContext } from "@/context";
 
 interface ITaskCardProps {
   task: Task;
-  setSelectedTask: (task: Task) => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  onStatus: () => void;
 }
 
-export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
+export const TaskCard: FC<ITaskCardProps> = ({
+  task,
+  onDelete,
+  onEdit,
+  onStatus,
+}) => {
   //destructure:
   const { id, title, priority, status } = task;
   const { values, dispatch, func } = useAppContext();
-  const { setEditMode, setOpenModal } = dispatch;
-
-  const editBtnClicked = () => {
-    setSelectedTask(task);
-    setEditMode(true);
-    setOpenModal(true);
-  };
 
   return (
     <>
@@ -39,7 +37,9 @@ export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
           </span>
         </div>
         <div className="">
-          <button className="status"> {status}</button>
+          <button className="status" onClick={onStatus}>
+            {status}
+          </button>
         </div>
         {/* <div className="progress">
         <CircularProgressbar
@@ -55,7 +55,7 @@ export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
             height={24}
             width={24}
             alt="edit icon"
-            onClick={editBtnClicked}
+            onClick={onEdit}
           />
           <Image
             className="icon"
@@ -63,6 +63,7 @@ export const TaskCard: FC<ITaskCardProps> = ({ task, setSelectedTask }) => {
             height={24}
             width={24}
             alt="delete icon"
+            onClick={onDelete}
           />
         </div>
       </TaskWrapper>

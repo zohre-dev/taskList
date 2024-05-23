@@ -12,7 +12,7 @@ export const Button: FC<IProps> = (props) => {
     <ButtonContainer
       {...props}
       $bgcolor={props.bgcolor}
-      disabled={props.isdisabled}
+      $disabled={props.isdisabled}
     />
   );
 };

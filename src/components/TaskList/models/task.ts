@@ -1,5 +1,7 @@
 // import { TaskStatus } from "./taskStatus";
 
+import exp from "constants";
+
 export enum TaskStatus {
   TODO = "To Do",
   IN_PROGRESS = "In Progress",
@@ -11,9 +13,10 @@ export enum TaskPriority {
   Medium = "medium",
   Low = "low",
 }
+export type TaskPriorityType = "high" | "medium" | "low";
 export interface Task {
-  id?: number;
+  id: number;
   title: string;
-  priority: TaskPriority; //"high" | "medium" | "low"
+  priority: TaskPriorityType; //"high" | "medium" | "low"
   status?: TaskStatus; //To Do  , In Progress  , Done
 }

@@ -1,34 +1,45 @@
 import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import Image from "next/image";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, MouseEventHandler, useEffect, useState } from "react";
 import Modal from "..";
 import { useAppContext } from "@/context";
 import {
   Task,
   TaskPriority,
+  TaskPriorityType,
   TaskStatus,
 } from "@/components/TaskList/models/task";
 
 interface IAddOrEditProps {
   addOrEditFunc: (task: Task) => void;
-  selectedTask: Task;
+  selectedTask: Task | undefined;
 }
+interface IErrors {
+  [errorTitle: string]: string;
+}
+const defaultValue = {
+  id: 0,
+  title: "",
+  priority: TaskPriority.Low,
+  status: TaskStatus.TODO,
+};
 
 export const AddOrEditModal: FC<IAddOrEditProps> = ({
   addOrEditFunc,
   selectedTask,
 }) => {
-  const [lastId, setLastId] = useState<number | undefined>(0);
-  const [temporaryTask, setTemporaryTask] = useState<Task>({
-    title: "",
-    priority: TaskPriority.Low,
-    status: TaskStatus.TODO,
-  });
-  //destructure:
-  const { values, dispatch, func } = useAppContext();
-  const { tasks, editMode } = values;
+  const [lastId, setLastId] = useState<number>(0);
+  const [temporaryTask, setTemporaryTask] = useState<Task>(defaultValue);
+  const [isDisable, setIsDisable] = useState<boolean>(true);
+  const [errors, setErrors] = useState<IErrors>({});
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  //context destructure:
+  const { values, func } = useAppContext();
+  const { tasks, editMode, deleteMode } = values;
   const { onClose } = func;
+  //deleteMode is true :
+  if (deleteMode) return <></>;
 
   const handleOnClose = () => {
     onClose();
@@ -36,36 +47,89 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setTemporaryTask({ id: lastId! + 1, ...temporaryTask, title: value });
-  };
-  const AddOrEditButtonClicked = () => {
-    addOrEditFunc(temporaryTask);
-    onClose();
+    if (value.trim().length > 0) setIsDisable(false);
+    else {
+      setIsDisable(true);
+      setErrors({});
+    }
+    setTemporaryTask({
+      ...temporaryTask,
+      id: editMode ? selectedTask!.id : lastId! + 1,
+      title: value,
+    });
   };
 
-  // const selectPriority = (priority: TaskPriotity) => {
-  //   setTemporaryTask((prevTasks)=> {...prevTasks , priority:priority.})
-  // };
+  const validateForm = () => {
+    let errorsObj: IErrors = {};
+    //min-length
+    if (temporaryTask.title.trim().length < 3) {
+      errorsObj.minlengthErr = "min length are 3 characters";
+    }
+    //max-length
+    if (temporaryTask.title.trim().length > 20) {
+      errorsObj.maxlengthErr = "max length are 20 characters";
+    }
+    // true if its a number, false if not
+    if (!isNaN(+temporaryTask.title.trim())) {
+      errorsObj.onlyNumber = "at least one letter is required";
+    }
+    // console.log("errorsObj ", errorsObj.length);
+    setErrors(errorsObj);
+    setIsFormValid(Object.keys(errorsObj).length === 0);
+  };
+  const AddOrEditButtonClicked = () => {
+    validateForm();
+  };
+
+  const selectPriority = (priority: TaskPriorityType) => {
+    setTemporaryTask((prevTasks) => ({ ...prevTasks, priority: priority }));
+  };
 
   //destructure:
   const { title } = temporaryTask;
-
+  const buttonsArr = [
+    {
+      className: "priorityBtn",
+      bgcolor: "#f73446",
+      title: TaskPriority.High,
+      onClick: () => {
+        selectPriority(TaskPriority.High);
+      },
+    },
+    {
+      className: "priorityBtn priorityBtn-selected",
+      bgcolor: "#ffbd21",
+      title: TaskPriority.Medium,
+      onClick: () => selectPriority(TaskPriority.Medium),
+    },
+    {
+      className: "priorityBtn",
+      bgcolor: "#0ac947",
+      title: TaskPriority.Low,
+      onClick: () => selectPriority(TaskPriority.Low),
+    },
+  ];
   useEffect(() => {
     //it's addMode:
     if (!editMode) {
-      console.log("Add Mode");
       const id = tasks[tasks.length - 1].id;
       setLastId(id);
     } else {
-      console.log("Edit Mode");
-
-      temporaryTask.id = selectedTask.id;
-      temporaryTask.title = selectedTask.title;
-      temporaryTask.priority = selectedTask.priority;
-      temporaryTask.status = selectedTask.status;
-      console.log(temporaryTask);
+      //it's editMode:
+      if (selectedTask) {
+        setTemporaryTask(selectedTask);
+      }
     }
-  }, []);
+  }, [selectedTask, editMode]);
+
+  useEffect(() => {
+    //if there are no errors:
+    if (isFormValid) {
+      addOrEditFunc(temporaryTask);
+      setTemporaryTask(defaultValue);
+      onClose();
+    }
+  }, [isFormValid]);
   return (
     <Modal
       show={values.open}
@@ -73,7 +137,10 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       closable={values.closable}
       onClose={func.onClose}
     >
-      <form className="flex flex-col gap-5">
+      <form
+        className="flex flex-col gap-5"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <div className="flex justify-between ">
           <span>{editMode ? "Edit Task" : "Add Task"}</span>
           <Image
@@ -84,6 +151,13 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
             onClick={handleOnClose}
           />
         </div>
+        <ul className="errorBox">
+          {Object.entries(errors)?.map(([key, value]) => (
+            <li key={key} className="text-red-500">
+              <span>{value}</span>
+            </li>
+          ))}
+        </ul>
         <Input
           label="Task"
           placeholder="Type your task here..."
@@ -94,26 +168,24 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
         <div className="flex flex-col gap-2">
           <label>Priority</label>
           <div className="flex  gap-3">
-            <Button
-              className="priorityBtn"
-              bgcolor="#f73446"
-              // onClick={selectPriority}
-            >
-              {TaskPriority.High}
-            </Button>
-            <Button
-              className="priorityBtn priorityBtn-selected"
-              bgcolor="#ffbd21"
-            >
-              {TaskPriority.Medium}
-            </Button>
-            <Button className="priorityBtn" bgcolor="#0ac947">
-              {TaskPriority.Low}
-            </Button>
+            {buttonsArr.map((item, index) => (
+              <Button
+                className={item.className}
+                bgcolor={item.bgcolor}
+                onClick={item.onClick}
+                key={index}
+              >
+                {item.title}
+              </Button>
+            ))}
           </div>
         </div>
         <div className="flex justify-end mt-5">
-          <Button bgcolor="#713fff" onClick={AddOrEditButtonClicked}>
+          <Button
+            bgcolor="#713fff"
+            onClick={AddOrEditButtonClicked}
+            isdisabled={isDisable}
+          >
             {editMode ? "Edit" : "Add"}
           </Button>
         </div>
