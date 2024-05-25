@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { TaskCard } from "./TaskCard";
 import Image from "next/image";
 import { TaskContainer } from "./style";
@@ -10,18 +10,18 @@ import { AddOrEditModal } from "../Modal/AddOrEditModal";
 import { DeleteModal } from "../Modal/DeleteModal";
 
 export const TaskList: FC = () => {
-  // const [selectedTask, setSelectedTask] = useState<{}>({});
-
-  //TODO
+  const [selectedTaskId, setSelectedTaskId] = useState<number>(0);
   const [selectedTask, setSelectedTask] = useState<Task>();
-  //destructure:
-  const { values, dispatch } = useAppContext();
+  //context destructure:
+  const { values, dispatch, func } = useAppContext();
   const { tasks, editMode } = values;
+  const { onClose } = func;
 
   const { setOpenModal, setEditMode, setTasks, setDeleteMode } = dispatch;
 
   const AddBtnClicked = () => {
     setEditMode(false);
+    setDeleteMode(false);
     setOpenModal(true);
   };
 
@@ -33,12 +33,29 @@ export const TaskList: FC = () => {
     setOpenModal(true);
   };
   const onDelete = (id: number) => {
+    // console.log(id);
+    setSelectedTaskId(id);
     setEditMode(false);
     setDeleteMode(true);
     setOpenModal(true);
-
-    // setTasks((prev) => prev.filter((item) => item.id !== id));
   };
+  const deleteFunc = () => {
+    setTasks((prev) => prev.filter((item) => item.id !== selectedTaskId));
+    onClose();
+    setDeleteMode(false);
+  };
+  const addOrEditFunc = (task: Task) => {
+    //it's addMode:
+    if (!editMode) {
+      setTasks([task, ...tasks]);
+    }
+    //it's editMode:
+    else {
+      const editedTasks = tasks.map((tsk) => (tsk.id === task.id ? task : tsk));
+      setTasks(editedTasks);
+    }
+  };
+
   const onStatus = (id: number) => {
     const statusChengedTasks = tasks.map((tsk) => {
       if (tsk.id === id) {
@@ -61,19 +78,6 @@ export const TaskList: FC = () => {
     });
 
     setTasks(statusChengedTasks);
-  };
-
-  const addOrEditFunc = (task: Task) => {
-    //it's addMode:
-    if (!editMode) {
-      setTasks([task, ...tasks]);
-    }
-    //it's editMode:
-    else {
-      const editedTasks = tasks.map((tsk) => (tsk.id === task.id ? task : tsk));
-      console.log(editedTasks);
-      setTasks(editedTasks);
-    }
   };
 
   return (
@@ -103,11 +107,11 @@ export const TaskList: FC = () => {
         ))}
       </div>
 
+      <DeleteModal deleteFunc={deleteFunc} />
       <AddOrEditModal
         addOrEditFunc={addOrEditFunc}
         selectedTask={selectedTask}
       />
-      <DeleteModal />
     </TaskContainer>
   );
 };

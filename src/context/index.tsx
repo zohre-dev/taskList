@@ -16,7 +16,7 @@ interface IContext {
     open: boolean;
     width: number;
     closable: boolean;
-    editMode: boolean;
+    editMode: boolean; //false ==> its addMode   , true ==> its editMode
     deleteMode: boolean;
     tasks: Task[];
     confirmDeletion: boolean;

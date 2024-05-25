@@ -4,9 +4,18 @@ import { useAppContext } from "@/context";
 import { Button } from "@/components/Button";
 import { DeleteModalWrapper } from "./style";
 
-export const DeleteModal: FC = () => {
+interface IDelete {
+  deleteFunc: () => void;
+}
+export const DeleteModal: FC<IDelete> = ({ deleteFunc }) => {
   const { values, func } = useAppContext();
+  const { onClose } = func;
   const { deleteMode } = values;
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    deleteFunc();
+  };
 
   if (!deleteMode) return <></>;
   return (
@@ -19,7 +28,9 @@ export const DeleteModal: FC = () => {
       <DeleteModalWrapper>
         <p>Are you sure you want to delete this task?</p>
         <div className="delete-modal-actions">
-          <Button bgcolor="#713fff">Delete</Button>
+          <Button bgcolor="#713fff" onClick={handleDelete}>
+            Delete
+          </Button>
           <Button bgcolor="#713fff">Cancel</Button>
         </div>
       </DeleteModalWrapper>

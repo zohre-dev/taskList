@@ -38,8 +38,6 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   const { values, func } = useAppContext();
   const { tasks, editMode, deleteMode } = values;
   const { onClose } = func;
-  //deleteMode is true :
-  if (deleteMode) return <></>;
 
   const handleOnClose = () => {
     onClose();
@@ -75,9 +73,14 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
     }
     // console.log("errorsObj ", errorsObj.length);
     setErrors(errorsObj);
+    console.log(
+      "length of error is zero : ",
+      Object.keys(errorsObj).length === 0
+    );
     setIsFormValid(Object.keys(errorsObj).length === 0);
   };
   const AddOrEditButtonClicked = () => {
+    // e.preventDefault();
     validateForm();
   };
 
@@ -93,6 +96,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       bgcolor: "#f73446",
       title: TaskPriority.High,
       onClick: () => {
+        // e.preventDefault();
         selectPriority(TaskPriority.High);
       },
     },
@@ -123,13 +127,18 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   }, [selectedTask, editMode]);
 
   useEffect(() => {
+    console.log("im in useEffect");
     //if there are no errors:
     if (isFormValid) {
+      console.log("form is valid");
       addOrEditFunc(temporaryTask);
       setTemporaryTask(defaultValue);
       onClose();
     }
   }, [isFormValid]);
+
+  //deleteMode is true :
+  if (deleteMode) return <></>;
   return (
     <Modal
       show={values.open}
