@@ -21,21 +21,16 @@ export const TaskList: FC = () => {
 
   const AddBtnClicked = () => {
     setEditMode(false);
-    setDeleteMode(false);
-    setOpenModal(true);
+    setOpenModal(true); //   const [openModal, setOpenModal] = useState<boolean>(false);
   };
 
   const onEdit = (task: Task) => {
     setEditMode(true);
-    setDeleteMode(false);
     setSelectedTask(task);
-
     setOpenModal(true);
   };
   const onDelete = (id: number) => {
-    // console.log(id);
     setSelectedTaskId(id);
-    setEditMode(false);
     setDeleteMode(true);
     setOpenModal(true);
   };

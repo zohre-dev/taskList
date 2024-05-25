@@ -17,6 +17,7 @@ export const DeleteModal: FC<IDelete> = ({ deleteFunc }) => {
     deleteFunc();
   };
 
+  //deleteMode is false:
   if (!deleteMode) return <></>;
   return (
     <Modal
