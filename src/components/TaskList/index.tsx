@@ -15,29 +15,28 @@ export const TaskList: FC = () => {
   //context destructure:
   const { values, dispatch, func } = useAppContext();
   const { tasks, editMode } = values;
-  const { onClose } = func;
-
-  const { setOpenModal, setEditMode, setTasks, setDeleteMode } = dispatch;
+  const { setOpenModal, setEditMode, setTasks, setOpenDeleteModal } = dispatch;
 
   const AddBtnClicked = () => {
     setEditMode(false);
-    setOpenModal(true); //   const [openModal, setOpenModal] = useState<boolean>(false);
+    setOpenDeleteModal(false); //close DeleteModal
+    setOpenModal(true); //open AddModal
   };
 
   const onEdit = (task: Task) => {
-    setEditMode(true);
     setSelectedTask(task);
-    setOpenModal(true);
+    setEditMode(true);
+    setOpenDeleteModal(false); //close DeleteModal
+    setOpenModal(true); //open EditModal
   };
   const onDelete = (id: number) => {
     setSelectedTaskId(id);
-    setDeleteMode(true);
-    setOpenModal(true);
+    setOpenModal(false); //close AddOrEditModal
+    setOpenDeleteModal(true); //open DeleteModal
   };
   const deleteFunc = () => {
     setTasks((prev) => prev.filter((item) => item.id !== selectedTaskId));
-    onClose();
-    setDeleteMode(false);
+    setOpenDeleteModal(false); //close DeleteModal
   };
   const addOrEditFunc = (task: Task) => {
     //it's addMode:

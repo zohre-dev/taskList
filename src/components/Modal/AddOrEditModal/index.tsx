@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChangeEvent, FC, MouseEventHandler, useEffect, useState } from "react";
 import Modal from "..";
 import { useAppContext } from "@/context";
+import { theme } from "@/app/styles/theme";
 import {
   Task,
   TaskPriority,
@@ -36,11 +37,11 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   //context destructure:
   const { values, func } = useAppContext();
-  const { tasks, editMode, deleteMode } = values;
-  const { onClose } = func;
+  const { tasks, editMode } = values;
+  const { onCloseMoadl } = func;
 
   const handleOnClose = () => {
-    onClose();
+    onCloseMoadl();
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +81,6 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
     setIsFormValid(Object.keys(errorsObj).length === 0);
   };
   const AddOrEditButtonClicked = () => {
-    // e.preventDefault();
     validateForm();
   };
 
@@ -92,23 +92,28 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   const { title } = temporaryTask;
   const buttonsArr = [
     {
-      className: "priorityBtn",
-      bgcolor: "#f73446",
+      className: `priorityBtn ${
+        temporaryTask.priority === TaskPriority.High && "priorityBtn-selected"
+      }`,
+      bgcolor: `${theme.error}`,
       title: TaskPriority.High,
       onClick: () => {
-        // e.preventDefault();
         selectPriority(TaskPriority.High);
       },
     },
     {
-      className: "priorityBtn priorityBtn-selected",
-      bgcolor: "#ffbd21",
+      className: `priorityBtn ${
+        temporaryTask.priority === TaskPriority.Medium && "priorityBtn-selected"
+      }`,
+      bgcolor: `${theme.warning}`,
       title: TaskPriority.Medium,
       onClick: () => selectPriority(TaskPriority.Medium),
     },
     {
-      className: "priorityBtn",
-      bgcolor: "#0ac947",
+      className: `priorityBtn ${
+        temporaryTask.priority === TaskPriority.Low && "priorityBtn-selected"
+      }`,
+      bgcolor: `${theme.success}`,
       title: TaskPriority.Low,
       onClick: () => selectPriority(TaskPriority.Low),
     },
@@ -127,24 +132,22 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   }, [selectedTask, editMode]);
 
   useEffect(() => {
-    console.log("im in useEffect");
+    console.log("i'm in useEffect");
     //if there are no errors:
     if (isFormValid) {
       console.log("form is valid");
       addOrEditFunc(temporaryTask);
       setTemporaryTask(defaultValue);
-      onClose();
+      onCloseMoadl();
     }
   }, [isFormValid]);
 
-  //deleteMode is true :
-  if (deleteMode) return <></>;
   return (
     <Modal
-      show={values.open}
+      show={values.openModal}
       width={values.width}
       closable={values.closable}
-      onClose={func.onClose}
+      onClose={func.onCloseMoadl}
     >
       <form
         className="flex flex-col gap-5"
@@ -191,7 +194,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
         </div>
         <div className="flex justify-end mt-5">
           <Button
-            bgcolor="#713fff"
+            bgcolor={`${theme.tertiary}`}
             onClick={AddOrEditButtonClicked}
             isdisabled={isDisable}
           >

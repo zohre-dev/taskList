@@ -9,22 +9,17 @@ interface IDelete {
 }
 export const DeleteModal: FC<IDelete> = ({ deleteFunc }) => {
   const { values, func } = useAppContext();
-  const { onClose } = func;
-  const { deleteMode } = values;
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleDelete = () => {
     deleteFunc();
   };
 
-  //deleteMode is false:
-  if (!deleteMode) return <></>;
   return (
     <Modal
-      show={values.open}
+      show={values.openDeleteModal}
       width={values.width}
       closable={values.closable}
-      onClose={func.onClose}
+      onClose={func.onCloseDeleteMoadl}
     >
       <DeleteModalWrapper>
         <p>Are you sure you want to delete this task?</p>
