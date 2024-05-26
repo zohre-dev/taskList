@@ -130,7 +130,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       }
     }
   }, [selectedTask, editMode]);
-
+  /******************************************************* */
   useEffect(() => {
     console.log("i'm in useEffect");
     //if there are no errors:
@@ -141,7 +141,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       onCloseMoadl();
     }
   }, [isFormValid]);
-
+  /******************************************************* */
   return (
     <Modal
       show={values.openModal}
