@@ -8,6 +8,7 @@ import { Task, TaskPriority, TaskStatus } from "./models/task";
 import { useAppContext } from "@/context";
 import { AddOrEditModal } from "../Modal/AddOrEditModal";
 import { DeleteModal } from "../Modal/DeleteModal";
+import { Fahkwang } from "next/font/google";
 
 export const TaskList: FC = () => {
   const [selectedTaskId, setSelectedTaskId] = useState<number>(0);
@@ -41,7 +42,8 @@ export const TaskList: FC = () => {
   const addOrEditFunc = (task: Task) => {
     //it's addMode:
     if (!editMode) {
-      setTasks([task, ...tasks]);
+      setTasks([...tasks, task]);
+      setEditMode(true);
     }
     //it's editMode:
     else {

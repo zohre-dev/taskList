@@ -121,6 +121,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   useEffect(() => {
     //it's addMode:
     if (!editMode) {
+      console.log("add Mode");
       const id = tasks[tasks.length - 1].id;
       setLastId(id);
     } else {
@@ -138,6 +139,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       console.log("form is valid");
       addOrEditFunc(temporaryTask);
       setTemporaryTask(defaultValue);
+      setIsFormValid(false);
       onCloseMoadl();
     }
   }, [isFormValid]);
