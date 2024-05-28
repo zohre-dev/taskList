@@ -36,24 +36,30 @@ export const TaskList: FC = () => {
     setOpenDeleteModal(true); //open DeleteModal
   };
   const deleteFunc = () => {
-    setTasks((prev) => prev.filter((item) => item.id !== selectedTaskId));
+    console.log("id is : ", selectedTaskId);
+    setTasks((prev) => prev?.filter((item) => item.id !== selectedTaskId));
     setOpenDeleteModal(false); //close DeleteModal
+    localStorage.tasksInfo = JSON.stringify(tasks);
   };
   const addOrEditFunc = (task: Task) => {
     //it's addMode:
     if (!editMode) {
-      setTasks([...tasks, task]);
+      console.log("add mode");
+      setTasks([...(tasks ?? []), task]);
       setEditMode(true);
     }
     //it's editMode:
     else {
-      const editedTasks = tasks.map((tsk) => (tsk.id === task.id ? task : tsk));
+      console.log("edit mode");
+      const editedTasks = tasks!.map((tsk) =>
+        tsk.id === task.id ? task : tsk
+      );
       setTasks(editedTasks);
     }
   };
 
   const onStatus = (id: number) => {
-    const statusChengedTasks = tasks.map((tsk) => {
+    const statusChengedTasks = tasks?.map((tsk) => {
       if (tsk.id === id) {
         switch (tsk.status) {
           case TaskStatus.TODO: {
@@ -75,6 +81,27 @@ export const TaskList: FC = () => {
 
     setTasks(statusChengedTasks);
   };
+  const getAllTasks = () => {
+    try {
+      setTasks(JSON.parse(localStorage.tasksInfo));
+    } catch (e) {
+      return undefined;
+    }
+  };
+  useEffect(() => {
+    getAllTasks();
+  }, []);
+
+  useEffect(() => {
+    //it's addMode:
+    if (!editMode) {
+      localStorage.tasksInfo = JSON.stringify(tasks);
+    }
+    //it's editMode:
+    else {
+      localStorage.tasksInfo = JSON.stringify(tasks);
+    }
+  }, [tasks]);
 
   return (
     <TaskContainer>
@@ -92,7 +119,7 @@ export const TaskList: FC = () => {
         </Button>
       </div>
       <div>
-        {tasks.map((tsk) => (
+        {tasks?.map((tsk) => (
           <TaskCard
             task={tsk}
             key={tsk.id}

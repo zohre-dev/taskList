@@ -51,9 +51,10 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       setIsDisable(true);
       setErrors({});
     }
+    console.log("hi iddddd", lastId + 1);
     setTemporaryTask({
       ...temporaryTask,
-      id: editMode ? selectedTask!.id : lastId! + 1,
+      id: editMode ? selectedTask!.id : lastId + 1,
       title: value,
     });
   };
@@ -122,8 +123,12 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
     //it's addMode:
     if (!editMode) {
       console.log("add Mode");
-      const id = tasks[tasks.length - 1].id;
-      setLastId(id);
+      if (tasks != undefined) {
+        const id = tasks[tasks?.length - 1].id;
+        setLastId(id);
+      } else {
+        setLastId(0);
+      }
     } else {
       //it's editMode:
       if (selectedTask) {
@@ -141,6 +146,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       setTemporaryTask(defaultValue);
       setIsFormValid(false);
       onCloseMoadl();
+      console.log("end");
     }
   }, [isFormValid]);
   /******************************************************* */

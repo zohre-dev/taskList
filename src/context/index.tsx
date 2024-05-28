@@ -18,13 +18,13 @@ interface IContext {
     width: number;
     closable: boolean;
     editMode: boolean; //false ==> its addMode   , true ==> its editMode
-    tasks: Task[];
+    tasks: Task[] | undefined;
   };
   dispatch: {
     setOpenModal: Dispatch<SetStateAction<boolean>>;
     setOpenDeleteModal: Dispatch<SetStateAction<boolean>>;
     setEditMode: Dispatch<SetStateAction<boolean>>;
-    setTasks: Dispatch<SetStateAction<Task[]>>;
+    setTasks: Dispatch<SetStateAction<Task[] | undefined>>;
   };
   func: {
     onCloseMoadl: () => void;
@@ -40,7 +40,7 @@ const AppContext = createContext<IContext>({
     openDeleteModal: false,
     width: 30,
     editMode: false,
-    tasks: taskRecords,
+    tasks: undefined,
   },
   dispatch: {
     setOpenModal: () => {},
@@ -58,7 +58,7 @@ const AppContext = createContext<IContext>({
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<Task[]>(taskRecords);
+  const [tasks, setTasks] = useState<Task[] | undefined>();
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const closeModalFunc = () => {
