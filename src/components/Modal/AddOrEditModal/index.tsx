@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import Image from "next/image";
-import { ChangeEvent, FC, MouseEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import Modal from "..";
 import { useAppContext } from "@/context";
 import { theme } from "@/app/styles/theme";
@@ -51,7 +51,6 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       setIsDisable(true);
       setErrors({});
     }
-    console.log("hi iddddd", lastId + 1);
     setTemporaryTask({
       ...temporaryTask,
       id: editMode ? selectedTask!.id : lastId + 1,
@@ -119,11 +118,11 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       onClick: () => selectPriority(TaskPriority.Low),
     },
   ];
+  /******************************************************* */
   useEffect(() => {
     //it's addMode:
     if (!editMode) {
-      console.log("add Mode");
-      if (tasks != undefined) {
+      if (tasks.length > 0) {
         const id = tasks[tasks?.length - 1].id;
         setLastId(id);
       } else {
@@ -136,17 +135,14 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       }
     }
   }, [selectedTask, editMode]);
-  /******************************************************* */
+
   useEffect(() => {
-    console.log("i'm in useEffect");
     //if there are no errors:
     if (isFormValid) {
-      console.log("form is valid");
       addOrEditFunc(temporaryTask);
       setTemporaryTask(defaultValue);
       setIsFormValid(false);
       onCloseMoadl();
-      console.log("end");
     }
   }, [isFormValid]);
   /******************************************************* */

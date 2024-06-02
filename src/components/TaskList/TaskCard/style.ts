@@ -18,6 +18,13 @@ export const TaskWrapper = styled.div`
     color: $secondary-color;
     margin-bottom: 7px;
   }
+
+  .title {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
   .priority {
     text-transform: capitalize;
   }

@@ -4,17 +4,16 @@ import { TaskCard } from "./TaskCard";
 import Image from "next/image";
 import { TaskContainer } from "./style";
 import { Button } from "../Button";
-import { Task, TaskPriority, TaskStatus } from "./models/task";
+import { Task, TaskStatus } from "./models/task";
 import { useAppContext } from "@/context";
 import { AddOrEditModal } from "../Modal/AddOrEditModal";
 import { DeleteModal } from "../Modal/DeleteModal";
-import { Fahkwang } from "next/font/google";
 
 export const TaskList: FC = () => {
   const [selectedTaskId, setSelectedTaskId] = useState<number>(0);
   const [selectedTask, setSelectedTask] = useState<Task>();
   //context destructure:
-  const { values, dispatch, func } = useAppContext();
+  const { values, dispatch } = useAppContext();
   const { tasks, editMode } = values;
   const { setOpenModal, setEditMode, setTasks, setOpenDeleteModal } = dispatch;
 
@@ -36,21 +35,17 @@ export const TaskList: FC = () => {
     setOpenDeleteModal(true); //open DeleteModal
   };
   const deleteFunc = () => {
-    console.log("id is : ", selectedTaskId);
     setTasks((prev) => prev?.filter((item) => item.id !== selectedTaskId));
     setOpenDeleteModal(false); //close DeleteModal
-    localStorage.tasksInfo = JSON.stringify(tasks);
   };
   const addOrEditFunc = (task: Task) => {
     //it's addMode:
     if (!editMode) {
-      console.log("add mode");
-      setTasks([...(tasks ?? []), task]);
+      setTasks([...tasks, task]);
       setEditMode(true);
     }
     //it's editMode:
     else {
-      console.log("edit mode");
       const editedTasks = tasks!.map((tsk) =>
         tsk.id === task.id ? task : tsk
       );
@@ -78,14 +73,13 @@ export const TaskList: FC = () => {
         return tsk;
       }
     });
-
     setTasks(statusChengedTasks);
   };
   const getAllTasks = () => {
     try {
       setTasks(JSON.parse(localStorage.tasksInfo));
     } catch (e) {
-      return undefined;
+      return [];
     }
   };
   useEffect(() => {
@@ -93,14 +87,7 @@ export const TaskList: FC = () => {
   }, []);
 
   useEffect(() => {
-    //it's addMode:
-    if (!editMode) {
-      localStorage.tasksInfo = JSON.stringify(tasks);
-    }
-    //it's editMode:
-    else {
-      localStorage.tasksInfo = JSON.stringify(tasks);
-    }
+    localStorage.tasksInfo = JSON.stringify(tasks);
   }, [tasks]);
 
   return (

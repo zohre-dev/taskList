@@ -1,7 +1,6 @@
 "use client";
 
 import { Task } from "@/components/TaskList/models/task";
-import { taskRecords } from "@/components/data/taskInfos";
 import {
   Dispatch,
   FC,
@@ -18,13 +17,13 @@ interface IContext {
     width: number;
     closable: boolean;
     editMode: boolean; //false ==> its addMode   , true ==> its editMode
-    tasks: Task[] | undefined;
+    tasks: Task[] | [];
   };
   dispatch: {
     setOpenModal: Dispatch<SetStateAction<boolean>>;
     setOpenDeleteModal: Dispatch<SetStateAction<boolean>>;
     setEditMode: Dispatch<SetStateAction<boolean>>;
-    setTasks: Dispatch<SetStateAction<Task[] | undefined>>;
+    setTasks: Dispatch<SetStateAction<Task[] | []>>;
   };
   func: {
     onCloseMoadl: () => void;
@@ -40,7 +39,7 @@ const AppContext = createContext<IContext>({
     openDeleteModal: false,
     width: 30,
     editMode: false,
-    tasks: undefined,
+    tasks: [],
   },
   dispatch: {
     setOpenModal: () => {},
@@ -58,7 +57,7 @@ const AppContext = createContext<IContext>({
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<Task[] | undefined>();
+  const [tasks, setTasks] = useState<Task[] | []>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const closeModalFunc = () => {
