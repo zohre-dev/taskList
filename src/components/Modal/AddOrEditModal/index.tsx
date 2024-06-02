@@ -37,7 +37,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   //context destructure:
   const { values, func } = useAppContext();
-  const { tasks, editMode } = values;
+  const { tasks, currentMode } = values;
   const { onCloseMoadl } = func;
 
   const handleOnClose = () => {
@@ -51,9 +51,10 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
       setIsDisable(true);
       setErrors({});
     }
+
     setTemporaryTask({
       ...temporaryTask,
-      id: editMode ? selectedTask!.id : lastId + 1,
+      id: currentMode === "edit" ? selectedTask!.id : lastId + 1,
       title: value,
     });
   };
@@ -121,20 +122,20 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
   /******************************************************* */
   useEffect(() => {
     //it's addMode:
-    if (!editMode) {
+    if (currentMode === "add") {
       if (tasks.length > 0) {
         const id = tasks[tasks?.length - 1].id;
         setLastId(id);
       } else {
         setLastId(0);
       }
-    } else {
+    } else if (currentMode === "edit") {
       //it's editMode:
       if (selectedTask) {
         setTemporaryTask(selectedTask);
       }
     }
-  }, [selectedTask, editMode]);
+  }, [selectedTask, currentMode]);
 
   useEffect(() => {
     //if there are no errors:
@@ -158,7 +159,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="flex justify-between ">
-          <span>{editMode ? "Edit Task" : "Add Task"}</span>
+          <span>{currentMode === "edit" ? "Edit Task" : "Add Task"}</span>
           <Image
             src="/assets/icons/close.svg"
             width={24}
@@ -202,7 +203,7 @@ export const AddOrEditModal: FC<IAddOrEditProps> = ({
             onClick={AddOrEditButtonClicked}
             isdisabled={isDisable}
           >
-            {editMode ? "Edit" : "Add"}
+            {currentMode === "edit" ? "Edit" : "Add"}
           </Button>
         </div>
       </form>

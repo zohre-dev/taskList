@@ -10,24 +10,25 @@ import {
   useState,
 } from "react";
 /************************************************************************************ */
+type currentModeType = "add" | "edit" | "none";
 interface IContext {
   values: {
     openModal: boolean;
     openDeleteModal: boolean;
     width: number;
     closable: boolean;
-    editMode: boolean; //false ==> its addMode   , true ==> its editMode
+    currentMode: currentModeType; //"add" | "edit" | "none"
     tasks: Task[] | [];
   };
   dispatch: {
     setOpenModal: Dispatch<SetStateAction<boolean>>;
     setOpenDeleteModal: Dispatch<SetStateAction<boolean>>;
-    setEditMode: Dispatch<SetStateAction<boolean>>;
+    setCurrentMode: Dispatch<SetStateAction<currentModeType>>;
     setTasks: Dispatch<SetStateAction<Task[] | []>>;
   };
   func: {
     onCloseMoadl: () => void;
-    onCloseDeleteMoadl: () => void;
+    onCloseDeleteModal: () => void;
   };
 }
 /************************************************************************************* */
@@ -38,18 +39,18 @@ const AppContext = createContext<IContext>({
     openModal: false,
     openDeleteModal: false,
     width: 30,
-    editMode: false,
+    currentMode: "none",
     tasks: [],
   },
   dispatch: {
     setOpenModal: () => {},
     setOpenDeleteModal: () => {},
-    setEditMode: () => {},
+    setCurrentMode: () => {},
     setTasks: () => {},
   },
   func: {
     onCloseMoadl: () => {},
-    onCloseDeleteMoadl: () => {},
+    onCloseDeleteModal: () => {},
   },
 });
 
@@ -58,13 +59,13 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [tasks, setTasks] = useState<Task[] | []>([]);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const [currentMode, setCurrentMode] = useState<currentModeType>("none");
 
   const closeModalFunc = () => {
     setOpenModal(false);
   };
 
-  const cloaseDeleteModalFunc = () => {
+  const closeDeleteModalFunc = () => {
     setOpenDeleteModal(false);
   };
   const contextValues: IContext = {
@@ -73,18 +74,18 @@ export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
       openModal: openModal,
       openDeleteModal: openDeleteModal,
       width: 30,
-      editMode: editMode,
+      currentMode: currentMode,
       tasks: tasks,
     },
     dispatch: {
       setOpenModal,
       setOpenDeleteModal,
       setTasks,
-      setEditMode,
+      setCurrentMode,
     },
     func: {
       onCloseMoadl: closeModalFunc,
-      onCloseDeleteMoadl: cloaseDeleteModalFunc,
+      onCloseDeleteModal: closeDeleteModalFunc,
     },
   };
 

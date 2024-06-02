@@ -14,18 +14,19 @@ export const TaskList: FC = () => {
   const [selectedTask, setSelectedTask] = useState<Task>();
   //context destructure:
   const { values, dispatch } = useAppContext();
-  const { tasks, editMode } = values;
-  const { setOpenModal, setEditMode, setTasks, setOpenDeleteModal } = dispatch;
+  const { tasks, currentMode } = values;
+  const { setOpenModal, setCurrentMode, setTasks, setOpenDeleteModal } =
+    dispatch;
 
   const AddBtnClicked = () => {
-    setEditMode(false);
+    setCurrentMode("add");
     setOpenDeleteModal(false); //close DeleteModal
     setOpenModal(true); //open AddModal
   };
 
   const onEdit = (task: Task) => {
     setSelectedTask(task);
-    setEditMode(true);
+    setCurrentMode("edit");
     setOpenDeleteModal(false); //close DeleteModal
     setOpenModal(true); //open EditModal
   };
@@ -40,17 +41,17 @@ export const TaskList: FC = () => {
   };
   const addOrEditFunc = (task: Task) => {
     //it's addMode:
-    if (!editMode) {
+    if (currentMode === "add") {
       setTasks([...tasks, task]);
-      setEditMode(true);
     }
     //it's editMode:
-    else {
+    else if (currentMode === "edit") {
       const editedTasks = tasks!.map((tsk) =>
         tsk.id === task.id ? task : tsk
       );
       setTasks(editedTasks);
     }
+    setCurrentMode("none");
   };
 
   const onStatus = (id: number) => {
